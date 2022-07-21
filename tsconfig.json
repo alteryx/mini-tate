@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "target": "es6",
+    "module": "commonjs",
+    "jsx": "react",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "alwaysStrict": true,
+    "declaration": true,
+    "moduleResolution": "node",
+    "baseUrl": "src",
+    "paths": {
+      "*": ["types/*"]
+    },
+    "typeRoots": ["node_modules/@types"],
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["custom.d.ts", "src/**/*.ts", "src/**/*.tsx", "src/**/*.css"],
+  "exclude": ["node_modules", "dist", "*.test.*"]
+}

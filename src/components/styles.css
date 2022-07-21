@@ -1,0 +1,27 @@
+/* Copyright (c) 2022 Alteryx, Inc. All rights reserved. */
+
+#removeAnnoBtn {
+  color: white;
+  background-color: #d7354a;
+}
+
+#removeAnnoBtn:hover {
+  background-color: rgb(150, 37, 51);
+}
+
+.staticAnno {
+  border-width: 3px;
+  border-style: solid;
+  position: absolute;
+  box-sizing: border-box;
+  border-color: #000;
+}
+
+.editableAnno {
+  border-width: 3px;
+  border-style: solid;
+  position: absolute;
+  box-sizing: border-box;
+  border-color: #d7354a;
+  background-color: rgba(255, 112, 130, 0.4);
+}
