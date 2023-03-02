@@ -73,6 +73,7 @@ function EditableAnnotation({
         >
           <CircleIcon
             data-testid="corner-tl"
+            fontSize='small'
             onPointerDown={(e) => handleCornerPointerDown(e, corner.TOP_LEFT)}
             onPointerUp={handleCornerPointerUp}
             style={{
@@ -84,38 +85,41 @@ function EditableAnnotation({
           />
           <CircleIcon
             data-testid="corner-tr"
+            fontSize='small'
             onPointerDown={(e) => handleCornerPointerDown(e, corner.TOP_RIGHT)}
             onPointerUp={handleCornerPointerUp}
             style={{
               position: 'absolute',
               marginTop: '-10px',
-              marginLeft: `${pixelToNum(width) - 12}px`,
+              marginLeft: `${pixelToNum(width) - 15}px`,
               color: 'black',
             }}
           />
           <CircleIcon
             data-testid="corner-bl"
+            fontSize='small'
             onPointerDown={(e) =>
               handleCornerPointerDown(e, corner.BOTTOM_LEFT)
             }
             onPointerUp={handleCornerPointerUp}
             style={{
               position: 'absolute',
-              marginTop: `${pixelToNum(height) - 10}px`,
+              marginTop: `${pixelToNum(height) - 15}px`,
               marginLeft: '-10px',
               color: 'black',
             }}
           />
           <CircleIcon
             data-testid="corner-br"
+            fontSize='small'
             onPointerDown={(e) =>
               handleCornerPointerDown(e, corner.BOTTOM_RIGHT)
             }
             onPointerUp={handleCornerPointerUp}
             style={{
               position: 'absolute',
-              marginTop: `${pixelToNum(height) - 10}px`,
-              marginLeft: `${pixelToNum(width) - 12}px`,
+              marginTop: `${pixelToNum(height) - 15}px`,
+              marginLeft: `${pixelToNum(width) - 15}px`,
               color: 'black',
             }}
           />
