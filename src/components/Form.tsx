@@ -1,6 +1,7 @@
 // Copyright (c) 2022 Alteryx, Inc. All rights reserved.
 
 import {
+  Autocomplete,
   Button,
   Card,
   CardActions,
@@ -9,7 +10,9 @@ import {
   Grid,
   Input,
   InputLabel,
-  NativeSelect,
+  MenuItem,
+  Select,
+  TextField,
 } from '@mui/material';
 import React, { useState } from 'react';
 
@@ -44,10 +47,6 @@ function Form({
   labels,
 }: Props) {
   const [values, setValues] = useState({ name, type });
-  const selectOptions = annotationTypes.map((opt) => ({
-    value: opt,
-    label: opt,
-  }));
 
   const { nameLabel, typeLabel, saveLabel, cancelLabel, deleteLabel } = labels;
 
@@ -68,29 +67,40 @@ function Form({
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <FormControl>
-              <InputLabel>{nameLabel || 'Annotation Name'}</InputLabel>
-              <Input
+              <TextField
                 id="annotation-name"
                 onChange={handleChange('name')}
                 value={values.name}
+                label={nameLabel || 'Annotation Name'}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                size='small'
               />
             </FormControl>
           </Grid>
           <Grid item xs={12}>
             <FormControl>
-              <InputLabel>{typeLabel || 'Annotation Type'}</InputLabel>
-              <NativeSelect onChange={handleChange('type')} value={values.type}>
-                {selectOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </NativeSelect>
+              <Autocomplete
+                id="combo-box-demo"
+                options={annotationTypes}
+                sx={{ width: 200 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                    label={typeLabel || 'Annotation Type'}
+                  />
+                )}
+                size="small"
+              />
             </FormControl>
           </Grid>
         </Grid>
       </CardContent>
-      <CardActions>
+      <CardActions style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', borderTop: '1px solid rgba(0, 0, 0, 0.1)' }}>
         <Button
           color="primary"
           onClick={() =>
@@ -110,7 +120,7 @@ function Form({
         >
           {saveLabel || 'Save'}
         </Button>
-        <Button color="error" onClick={handleCancel} variant="contained">
+        <Button color="secondary" onClick={handleCancel} variant="contained">
           {cancelLabel || 'Cancel'}
         </Button>
         {handleDelete && (
