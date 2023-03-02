@@ -11,7 +11,6 @@ const theme = createTheme({
   palette: {
     secondary: blue,
   },
-  spacing: 4,
   components: {
     MuiTextField: {
         styleOverrides: {

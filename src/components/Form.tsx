@@ -8,10 +8,6 @@ import {
   CardContent,
   FormControl,
   Grid,
-  Input,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
 } from '@mui/material';
 import React, { useState } from 'react';
@@ -46,6 +42,8 @@ function Form({
   annotationTypes,
   labels,
 }: Props) {
+
+  console.log(left)
   const [values, setValues] = useState({ name, type });
 
   const { nameLabel, typeLabel, saveLabel, cancelLabel, deleteLabel } = labels;
@@ -54,19 +52,26 @@ function Form({
     setValues({ ...values, [changeKey]: event.target.value });
   };
 
+  const calculateFormPosition = () => {
+    const leftCoord = pixelToNum(left) + pixelToNum(width) - 350;
+    if (leftCoord < pixelToNum(left)) return left;
+    return `${leftCoord}px`
+  }
+
   return (
     <Card
       style={{
         top: `${pixelToNum(top) + pixelToNum(height) + 10}px`,
-        left,
+        left: `${calculateFormPosition()}`,
         position: 'absolute',
         zIndex: '1',
+        width: 350
       }}
     >
       <CardContent>
         <Grid container spacing={4}>
           <Grid item xs={12}>
-            <FormControl>
+            <FormControl fullWidth>
               <TextField
                 id="annotation-name"
                 onChange={handleChange('name')}
@@ -80,11 +85,10 @@ function Form({
             </FormControl>
           </Grid>
           <Grid item xs={12}>
-            <FormControl>
+            <FormControl fullWidth>
               <Autocomplete
                 id="combo-box-demo"
                 options={annotationTypes}
-                sx={{ width: 200 }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -100,7 +104,7 @@ function Form({
           </Grid>
         </Grid>
       </CardContent>
-      <CardActions style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', borderTop: '1px solid rgba(0, 0, 0, 0.1)' }}>
+      <CardActions style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', borderTop: '1px solid rgba(0, 0, 0, 0.1)', display: 'flex', 'justifyContent': 'right' }}>
         <Button
           color="primary"
           onClick={() =>
