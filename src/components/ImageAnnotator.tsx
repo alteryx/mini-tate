@@ -1,5 +1,5 @@
 // Copyright (c) 2022 Alteryx, Inc. All rights reserved.
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useAppDispatch, useAppSelector, useCurrentImg } from '../hooks';
 import {
@@ -22,6 +22,7 @@ import {
   TOptions,
 } from '../types';
 import { cssToRawAnno, pixelToNum, rawToCSSAnno } from '../utils';
+import debounce from 'lodash/debounce';
 
 import AnnotationWrapper from './AnnotationWrapper';
 import Form from './Form';
@@ -60,6 +61,14 @@ export function ImageAnnotator({
   const [imgRatio, setImgRatio] = useState<TImgRatio>(imgRect);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [rawAnnos, setRawAnnos] = useState(annos || []);
+  const throttledPointerMove = useCallback(debounce((e: any) => {
+    const { clientX, clientY } = e;
+    if (!cornerDrag && !drag) return;
+    if (Number.isNaN(+clientX) || Number.isNaN(+clientY)) return;
+    if (pointOutOfBounds(+clientX, +clientY)) return;
+    if (cornerDrag) handleCornerPointerMove(e);
+    if (drag) handleDrag(e);
+  }, 0), [drag, cornerDrag]);
 
   useEffect(() => {
     if (imgRect.height !== 0 && imgRect.width !== 0) setImgRatio(imgRect);
@@ -75,7 +84,6 @@ export function ImageAnnotator({
     const img = document.getElementById('anno-img');
     if (options.imgStyles && img) {
       const { height, width } = img.getBoundingClientRect();
-      console.log("setting it again from a UE ", height, width)
       setImgRatio({ height, width });
     }
   }, [options.imgStyles]);
@@ -178,8 +186,6 @@ export function ImageAnnotator({
       name,
       type,
     };
-    console.log("this is the new annotation to be added: ", newAnnotation)
-    console.log("and this is the image ratio at this time: ", imgRatio)
     if (annotations.find((a) => a.name === name)) {
       annotation.remove();
       if (onError) onError(errorTypes.DUPLICATE);
@@ -314,20 +320,22 @@ export function ImageAnnotator({
       )
         return;
 
+      console.log("drag")
+
       dispatch(setLeft(`${newLeft}px`));
       dispatch(setTop(`${newTop}px`));
       dispatch(setCoords([clientX, clientY]));
     }
   };
 
-  const handlePointerMove = (e: any) => {
-    const { clientX, clientY } = e;
-    if (!cornerDrag && !drag) return;
-    if (Number.isNaN(+clientX) || Number.isNaN(+clientY)) return;
-    if (pointOutOfBounds(+clientX, +clientY)) return;
-    if (cornerDrag) handleCornerPointerMove(e);
-    if (drag) handleDrag(e);
-  };
+  // const handlePointerMove = (e: any) => {
+  //   const { clientX, clientY } = e;
+  //   if (!cornerDrag && !drag) return;
+  //   if (Number.isNaN(+clientX) || Number.isNaN(+clientY)) return;
+  //   if (pointOutOfBounds(+clientX, +clientY)) return;
+  //   if (cornerDrag) handleCornerPointerMove(e);
+  //   if (drag) handleDrag(e);
+  // };
 
   return (
       <div
@@ -361,12 +369,10 @@ export function ImageAnnotator({
             const { height, width } = (
               e.target as HTMLImageElement
             ).getBoundingClientRect();
-            console.log("loaded img??")
-            console.log("h and w ", height, width)
             setImgRatio({ height, width });
             setImgLoaded(true);
           }}
-          onPointerMove={handlePointerMove}
+          onPointerMove={throttledPointerMove}
           src={imageSrc}
           style={options.imgStyles ? options.imgStyles : {}}
         />
@@ -375,7 +381,7 @@ export function ImageAnnotator({
             annotationTypes={annotationTypes}
             handleCancelEdit={handleCancelEdit}
             handleEditAnnotation={handleEditAnnotation}
-            handlePointerMove={handlePointerMove}
+            handlePointerMove={throttledPointerMove}
             handleSaveEdit={handleSaveEdit}
             key={annotation.name}
             options={options}
