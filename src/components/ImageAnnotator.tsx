@@ -1,6 +1,4 @@
 // Copyright (c) 2022 Alteryx, Inc. All rights reserved.
-
-import { AyxAppWrapper } from '@alteryx/ui';
 import React, { useEffect, useState } from 'react';
 
 import { useAppDispatch, useAppSelector, useCurrentImg } from '../hooks';
@@ -64,18 +62,20 @@ export function ImageAnnotator({
   const [rawAnnos, setRawAnnos] = useState(annos || []);
 
   useEffect(() => {
-    setImgRatio(imgRect);
+    if (imgRect.height !== 0 && imgRect.width !== 0) setImgRatio(imgRect);
   }, [imgRect]);
 
   useEffect(() => {
-    if (imgLoaded)
+    if (imgLoaded && imgRatio.height > 0 && imgRatio.width > 0) {
       setAnnotations(rawToCSSAnno(rawAnnos, imgRatio.height, imgRatio.width));
+    }
   }, [rawAnnos, imgLoaded, imgRatio.height, imgRatio.width]);
 
   useEffect(() => {
     const img = document.getElementById('anno-img');
     if (options.imgStyles && img) {
       const { height, width } = img.getBoundingClientRect();
+      console.log("setting it again from a UE ", height, width)
       setImgRatio({ height, width });
     }
   }, [options.imgStyles]);
@@ -97,6 +97,7 @@ export function ImageAnnotator({
     newBoundary.style.boxSizing = 'border-box';
     newBoundary.style.backgroundColor = 'rgba(255, 112, 130, .4)';
     newBoundary.setAttribute('data-testid', 'new-annotation');
+    // user overrides default styles
     if (options.annoStyles) {
       Object.keys(options.annoStyles).forEach((key) => {
         newBoundary.style[key] = options.annoStyles[key];
@@ -177,6 +178,8 @@ export function ImageAnnotator({
       name,
       type,
     };
+    console.log("this is the new annotation to be added: ", newAnnotation)
+    console.log("and this is the image ratio at this time: ", imgRatio)
     if (annotations.find((a) => a.name === name)) {
       annotation.remove();
       if (onError) onError(errorTypes.DUPLICATE);
@@ -327,7 +330,6 @@ export function ImageAnnotator({
   };
 
   return (
-    <AyxAppWrapper>
       <div
         data-testid="container"
         id="anno-container"
@@ -359,6 +361,8 @@ export function ImageAnnotator({
             const { height, width } = (
               e.target as HTMLImageElement
             ).getBoundingClientRect();
+            console.log("loaded img??")
+            console.log("h and w ", height, width)
             setImgRatio({ height, width });
             setImgLoaded(true);
           }}
@@ -401,7 +405,6 @@ export function ImageAnnotator({
           />
         )}
       </div>
-    </AyxAppWrapper>
   );
 }
 

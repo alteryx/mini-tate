@@ -1,7 +1,7 @@
 // Copyright (c) 2022 Alteryx, Inc. All rights reserved.
 
-import { CircleFilled } from '@alteryx/icons';
-import { ClickAwayListener } from '@alteryx/ui';
+import CircleIcon from '@mui/icons-material/Circle';
+import { ClickAwayListener } from '@mui/material';
 import React from 'react';
 
 import Form from './Form';
@@ -71,7 +71,7 @@ function EditableAnnotation({
             width,
           }}
         >
-          <CircleFilled
+          <CircleIcon
             data-testid="corner-tl"
             onPointerDown={(e) => handleCornerPointerDown(e, corner.TOP_LEFT)}
             onPointerUp={handleCornerPointerUp}
@@ -82,7 +82,7 @@ function EditableAnnotation({
               color: 'black',
             }}
           />
-          <CircleFilled
+          <CircleIcon
             data-testid="corner-tr"
             onPointerDown={(e) => handleCornerPointerDown(e, corner.TOP_RIGHT)}
             onPointerUp={handleCornerPointerUp}
@@ -93,7 +93,7 @@ function EditableAnnotation({
               color: 'black',
             }}
           />
-          <CircleFilled
+          <CircleIcon
             data-testid="corner-bl"
             onPointerDown={(e) =>
               handleCornerPointerDown(e, corner.BOTTOM_LEFT)
@@ -106,7 +106,7 @@ function EditableAnnotation({
               color: 'black',
             }}
           />
-          <CircleFilled
+          <CircleIcon
             data-testid="corner-br"
             onPointerDown={(e) =>
               handleCornerPointerDown(e, corner.BOTTOM_RIGHT)

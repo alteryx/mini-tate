@@ -10,7 +10,7 @@ import {
   Input,
   InputLabel,
   NativeSelect,
-} from '@alteryx/ui';
+} from '@mui/material';
 import React, { useState } from 'react';
 
 import { TAnnotation, TLabels } from '../types';
@@ -110,7 +110,7 @@ function Form({
         >
           {saveLabel || 'Save'}
         </Button>
-        <Button color="secondary" onClick={handleCancel} variant="contained">
+        <Button color="error" onClick={handleCancel} variant="contained">
           {cancelLabel || 'Cancel'}
         </Button>
         {handleDelete && (
