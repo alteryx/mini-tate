@@ -43,7 +43,6 @@ function Form({
   labels,
 }: Props) {
 
-  console.log(left)
   const [values, setValues] = useState({ name, type });
 
   const { nameLabel, typeLabel, saveLabel, cancelLabel, deleteLabel } = labels;
