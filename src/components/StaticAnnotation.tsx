@@ -28,7 +28,6 @@ function StaticAnnotation({
   const [showName, setShowName] = useState<boolean>(false);
 
   const calculateTooltipPosition = () => {
-    console.log(pixelToNum(width) / 2);
     const leftCoord = pixelToNum(width) / 2 - 100;
     if (leftCoord < pixelToNum(left)) return left;
     return `${leftCoord}px`;
@@ -36,7 +35,7 @@ function StaticAnnotation({
 
   return (
     <div
-      className="staticAnno"
+      className={`staticAnno${showName ? ' pointer' : ''}`}
       data-testid="static-annotation"
       onClick={onClick}
       onPointerDown={(e) => e.stopPropagation()}
