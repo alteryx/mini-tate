@@ -405,7 +405,7 @@ export function ImageAnnotator({
 
 ImageAnnotator.defaultProps = {
   annos: null,
-  annotationTypes: ['string', 'image', 'table'],
+  annotationTypes: [],
   onChange: null,
   onError: null,
   options: [],

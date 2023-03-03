@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 
-import { render, genCustomEvt } from '../testUtils';
+import { render } from '../testUtils';
 import { ImageAnnotator } from '../components/ImageAnnotator';
 
 
@@ -87,8 +87,8 @@ describe('<ImmageAnnotator />', () => {
       fireEvent.pointerMove(screen.getByTestId('container'));
     }
     fireEvent.pointerUp(screen.getByRole('img'));
-    // save, cancel, and the dropdown buttons
-    expect(screen.getAllByRole('button')).toHaveLength(3);
+    // save and cancel
+    expect(screen.getAllByRole('button')).toHaveLength(2);
   });
 
   test('form is hidden by default', () => {
@@ -131,15 +131,15 @@ describe('<ImmageAnnotator />', () => {
     expect(mockOnChange).toBeCalled();
   });
 
-  test('form dropdown defaults to first entry in type array', () => {
+  test('hide form dropdown if there is no type array', () => {
     render(<ImageAnnotator imageSrc="" />);
     fireEvent.pointerDown(screen.getByRole('img'));
     fireEvent.pointerMove(screen.getByTestId('container'));
     fireEvent.pointerUp(screen.getByRole('img'));
-    expect(screen.getByDisplayValue('string')).not.toBeNull();
+    expect(screen.getAllByRole('textbox')).toHaveLength(1);
   });
 
-  test('form dropdown defaults to first entry in type array even when passed custom options', () => {
+  test('form dropdown defaults to first entry in type array when passed custom options', () => {
     render(
       <ImageAnnotator annotationTypes={['cat', 'dog', 'banana']} imageSrc="" />
     );
@@ -147,6 +147,7 @@ describe('<ImmageAnnotator />', () => {
     fireEvent.pointerMove(screen.getByTestId('container'));
     fireEvent.pointerUp(screen.getByRole('img'));
     expect(screen.getByDisplayValue('cat')).not.toBeNull();
+    expect(screen.getAllByRole('button')).toHaveLength(3);
   });
 
   test('clicking on static annotation puts it into edit mode', async () => {
