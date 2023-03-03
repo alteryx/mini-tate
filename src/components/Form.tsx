@@ -88,6 +88,7 @@ function Form({
               <Autocomplete
                 id="combo-box-demo"
                 options={annotationTypes}
+                onChange={handleChange('type')}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -98,6 +99,7 @@ function Form({
                   />
                 )}
                 size="small"
+                value={values.type}
               />
             </FormControl>
           </Grid>

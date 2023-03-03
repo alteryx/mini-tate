@@ -46,6 +46,7 @@ export function ImageAnnotator({
   options = {},
 }: TProps) {
   const dispatch = useAppDispatch();
+  const [imgLoaded, setImgLoaded] = useState(false);
   const imgRect = useCurrentImg();
   const { edit, drag, cornerDrag } = useAppSelector(selectMode);
 
@@ -59,7 +60,6 @@ export function ImageAnnotator({
   const [displayForm, setDisplayForm] = useState(false);
   const [annotations, setAnnotations] = useState<TAnnotation[]>([]);
   const [imgRatio, setImgRatio] = useState<TImgRatio>(imgRect);
-  const [imgLoaded, setImgLoaded] = useState(false);
   const [rawAnnos, setRawAnnos] = useState(annos || []);
   const debouncedPointerMove = useCallback(debounce((e: any) => {
     const { clientX, clientY } = e;
@@ -361,7 +361,9 @@ export function ImageAnnotator({
             setImgRatio({ height, width });
             setImgLoaded(true);
           }}
-          onPointerMove={debouncedPointerMove}
+            onPointerMove={() => {
+              debouncedPointerMove()
+            }}
           src={imageSrc}
           style={options.imgStyles ? options.imgStyles : {}}
         />
