@@ -80,7 +80,6 @@ function AnnotationWrapper({
   };
 
   const handleCornerPointerUp = (e) => {
-    console.log("pointer up called?")
     e.stopPropagation();
     dispatch(setCornerDrag(false));
     dispatch(setSelectedCorner(''));
@@ -136,6 +135,7 @@ function AnnotationWrapper({
       options={options}
       top={top}
       width={width}
+      name={name}
     />
   );
 }
