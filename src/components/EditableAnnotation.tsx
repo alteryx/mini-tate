@@ -73,7 +73,7 @@ function EditableAnnotation({
         >
           <CircleIcon
             data-testid="corner-tl"
-            fontSize='small'
+            fontSize="small"
             onPointerDown={(e) => handleCornerPointerDown(e, corner.TOP_LEFT)}
             onPointerUp={handleCornerPointerUp}
             style={{
@@ -85,7 +85,7 @@ function EditableAnnotation({
           />
           <CircleIcon
             data-testid="corner-tr"
-            fontSize='small'
+            fontSize="small"
             onPointerDown={(e) => handleCornerPointerDown(e, corner.TOP_RIGHT)}
             onPointerUp={handleCornerPointerUp}
             style={{
@@ -97,7 +97,7 @@ function EditableAnnotation({
           />
           <CircleIcon
             data-testid="corner-bl"
-            fontSize='small'
+            fontSize="small"
             onPointerDown={(e) =>
               handleCornerPointerDown(e, corner.BOTTOM_LEFT)
             }
@@ -111,7 +111,7 @@ function EditableAnnotation({
           />
           <CircleIcon
             data-testid="corner-br"
-            fontSize='small'
+            fontSize="small"
             onPointerDown={(e) =>
               handleCornerPointerDown(e, corner.BOTTOM_RIGHT)
             }

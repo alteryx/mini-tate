@@ -84,7 +84,9 @@ function Form({
               <FormControl fullWidth>
                 <TextField
                   id="annotation-name"
-                  onChange={(e) => setValues({...values, name: e.target.value})}
+                  onChange={(e) =>
+                    setValues({ ...values, name: e.target.value })
+                  }
                   value={values.name}
                   label={nameLabel || 'Annotation Name'}
                   InputLabelProps={{
@@ -94,30 +96,32 @@ function Form({
                 />
               </FormControl>
             </Grid>
-            { annotationTypes.length ? 
-            (<Grid item xs={12}>
-              <FormControl fullWidth>
-                <Autocomplete
-                  id="combo-box-demo"
-                  options={annotationTypes}
-                  onChange={(_, newValue, reason) => { 
-                    if (reason === 'clear' && annotationTypes.length) setValues({...values, type: annotationTypes[0]})
-                    else setValues({...values, type: newValue})
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      label={typeLabel || 'Annotation Type'}
-                    />
-                  )}
-                  size="small"
-                  value={values.type}
-                />
-              </FormControl>
-            </Grid>) : null }
+            {annotationTypes.length ? (
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <Autocomplete
+                    id="combo-box-demo"
+                    options={annotationTypes}
+                    onChange={(_, newValue, reason) => {
+                      if (reason === 'clear' && annotationTypes.length)
+                        setValues({ ...values, type: annotationTypes[0] });
+                      else setValues({ ...values, type: newValue });
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        label={typeLabel || 'Annotation Type'}
+                      />
+                    )}
+                    size="small"
+                    value={values.type}
+                  />
+                </FormControl>
+              </Grid>
+            ) : null}
           </Grid>
         </CardContent>
         <CardActions

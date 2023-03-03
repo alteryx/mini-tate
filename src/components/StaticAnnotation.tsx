@@ -22,20 +22,20 @@ function StaticAnnotation({
   left,
   onClick,
   options,
-  name
+  name,
 }: Props) {
   const styles = options.annoStyles || {};
   const [showName, setShowName] = useState<boolean>(false);
 
   const calculateTooltipPosition = () => {
-    console.log(pixelToNum(width)/2)
-    const leftCoord = pixelToNum(width)/2 - 100;
+    console.log(pixelToNum(width) / 2);
+    const leftCoord = pixelToNum(width) / 2 - 100;
     if (leftCoord < pixelToNum(left)) return left;
     return `${leftCoord}px`;
   };
 
   return (
-      <div
+    <div
       className="staticAnno"
       data-testid="static-annotation"
       onClick={onClick}
@@ -44,19 +44,17 @@ function StaticAnnotation({
       onMouseEnter={() => setShowName(true)}
       onMouseLeave={() => setShowName(false)}
     >
-    {showName && <h3 style={{
-        top: `${pixelToNum(height) - 10}px`,
-        left: calculateTooltipPosition(),
-        position: 'absolute',
-        zIndex: '1',
-        background: '#f2f2f2',
-        border: '2px solid #d6d6d6',
-        padding: '20px',
-        width: 200,
-        boxSizing: 'border-box',
-        textAlign: 'center',
-        overflowWrap: 'break-word'
-      }}>{name}</h3>}
+      {showName && (
+        <h3
+          className="annotationNameHover"
+          style={{
+            top: `${pixelToNum(height) - 10}px`,
+            left: calculateTooltipPosition(),
+          }}
+        >
+          {name}
+        </h3>
+      )}
     </div>
   );
 }
