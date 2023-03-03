@@ -31,37 +31,6 @@ const testAnnos = [
 
 const loadImg = () => fireEvent.load(screen.getByRole('img'), { target: {getBoundingClientRect: () => ({ height: 100, width: 100 })}});
 
-const renderAnnoAndSelect = () => {
-  render(<ImageAnnotator annos={[testAnnos[0]]} imageSrc="fake.png" />, {});
-  screen.getByRole('img').getBoundingClientRect = () => ({
-    width: 100,
-    height: 100,
-    bottom: 100,
-    left: 0,
-    top: 0,
-    right: 100,
-    x: 0,
-    y: 0,
-    toJSON: null,
-  });
-  (
-    screen.getByTestId('container').parentNode as HTMLElement
-  ).getBoundingClientRect = () => ({
-    width: 100,
-    height: 100,
-    bottom: 100,
-    left: 0,
-    top: 0,
-    right: 100,
-    x: 0,
-    y: 0,
-    toJSON: null,
-  });
-
-  loadImg();
-  fireEvent.click(screen.getByTestId('static-annotation'));
-};
-
 describe('<ImmageAnnotator />', () => {
   test('renders image', () => {
     render(<ImageAnnotator imageSrc="" />);

@@ -5,7 +5,7 @@ A small React library that provides annotation utilities for marking images.
 ## Features
 
 - Mousedown and drag to create a new annotation.
-- Form for inputting name and type of annotation (type dropdown is customizable).
+- Form for inputting name and, optionally, type of annotation.
 - Edit annotations by clicking and dragging to move, pulling on the corners to resize, and editing the form to update the metadata.
 - Custom `onChange` callback can be supplied to have control over the annotations as they change.
 - Custom `onError` callback can be supplied to have control over errors as they occur.
@@ -80,7 +80,7 @@ function App() {
 - `annos`: annotations to be rendered.
 - `onChange`: callback to be triggered whenever the annotations update.
 - `onError`: callback to be triggered whenever there is an error with the annotations.
-- `annotationTypes`: values to populate the "annotation type" input dropdown. Defaults to "string", "image", and "table".
+- `annotationTypes`: values to populate the "annotation type" input dropdown. Defaults to `[]` and dropdown will be hidden.
 - `options`: object to pass in custom styles or labels. More details below.
 
 ### Options
