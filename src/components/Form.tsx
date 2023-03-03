@@ -94,7 +94,8 @@ function Form({
                 />
               </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            { annotationTypes.length ? 
+            (<Grid item xs={12}>
               <FormControl fullWidth>
                 <Autocomplete
                   id="combo-box-demo"
@@ -116,7 +117,7 @@ function Form({
                   value={values.type}
                 />
               </FormControl>
-            </Grid>
+            </Grid>) : null }
           </Grid>
         </CardContent>
         <CardActions

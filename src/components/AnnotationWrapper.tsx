@@ -80,6 +80,7 @@ function AnnotationWrapper({
   };
 
   const handleCornerPointerUp = (e) => {
+    console.log("pointer up called?")
     e.stopPropagation();
     dispatch(setCornerDrag(false));
     dispatch(setSelectedCorner(''));

@@ -61,7 +61,7 @@ export function ImageAnnotator({
   const [annotations, setAnnotations] = useState<TAnnotation[]>([]);
   const [imgRatio, setImgRatio] = useState<TImgRatio>(imgRect);
   const [rawAnnos, setRawAnnos] = useState(annos || []);
-  const debouncedPointerMove = useCallback(debounce((e: any) => {
+  const debouncedPointerMove = useCallback(debounce((e: PointerEvent) => {
     const { clientX, clientY } = e;
     if (!cornerDrag && !drag) return;
     if (Number.isNaN(+clientX) || Number.isNaN(+clientY)) return;
@@ -361,9 +361,7 @@ export function ImageAnnotator({
             setImgRatio({ height, width });
             setImgLoaded(true);
           }}
-            onPointerMove={() => {
-              debouncedPointerMove()
-            }}
+            onPointerMove={(e) => debouncedPointerMove(e)}
           src={imageSrc}
           style={options.imgStyles ? options.imgStyles : {}}
         />
