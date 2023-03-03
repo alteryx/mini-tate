@@ -1,16 +1,15 @@
 // Copyright (c) 2022 Alteryx, Inc. All rights reserved.
 
 import {
+  Autocomplete,
   Button,
   Card,
   CardActions,
   CardContent,
   FormControl,
   Grid,
-  Input,
-  InputLabel,
-  NativeSelect,
-} from '@alteryx/ui';
+  TextField,
+} from '@mui/material';
 import React, { useState } from 'react';
 
 import { TAnnotation, TLabels } from '../types';
@@ -43,11 +42,8 @@ function Form({
   annotationTypes,
   labels,
 }: Props) {
+
   const [values, setValues] = useState({ name, type });
-  const selectOptions = annotationTypes.map((opt) => ({
-    value: opt,
-    label: opt,
-  }));
 
   const { nameLabel, typeLabel, saveLabel, cancelLabel, deleteLabel } = labels;
 
@@ -55,42 +51,61 @@ function Form({
     setValues({ ...values, [changeKey]: event.target.value });
   };
 
+  const calculateFormPosition = () => {
+    const leftCoord = pixelToNum(left) + pixelToNum(width) - 350;
+    if (leftCoord < pixelToNum(left)) return left;
+    return `${leftCoord}px`
+  }
+
   return (
     <Card
       style={{
         top: `${pixelToNum(top) + pixelToNum(height) + 10}px`,
-        left,
+        left: `${calculateFormPosition()}`,
         position: 'absolute',
         zIndex: '1',
+        width: 350
       }}
     >
       <CardContent>
         <Grid container spacing={4}>
           <Grid item xs={12}>
-            <FormControl>
-              <InputLabel>{nameLabel || 'Annotation Name'}</InputLabel>
-              <Input
+            <FormControl fullWidth>
+              <TextField
                 id="annotation-name"
                 onChange={handleChange('name')}
                 value={values.name}
+                label={nameLabel || 'Annotation Name'}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                size='small'
               />
             </FormControl>
           </Grid>
           <Grid item xs={12}>
-            <FormControl>
-              <InputLabel>{typeLabel || 'Annotation Type'}</InputLabel>
-              <NativeSelect onChange={handleChange('type')} value={values.type}>
-                {selectOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </NativeSelect>
+            <FormControl fullWidth>
+              <Autocomplete
+                id="combo-box-demo"
+                options={annotationTypes}
+                onChange={handleChange('type')}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                    label={typeLabel || 'Annotation Type'}
+                  />
+                )}
+                size="small"
+                value={values.type}
+              />
             </FormControl>
           </Grid>
         </Grid>
       </CardContent>
-      <CardActions>
+      <CardActions style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', borderTop: '1px solid rgba(0, 0, 0, 0.1)', display: 'flex', 'justifyContent': 'right' }}>
         <Button
           color="primary"
           onClick={() =>

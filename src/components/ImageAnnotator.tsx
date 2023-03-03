@@ -1,7 +1,5 @@
 // Copyright (c) 2022 Alteryx, Inc. All rights reserved.
-
-import { AyxAppWrapper } from '@alteryx/ui';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useAppDispatch, useAppSelector, useCurrentImg } from '../hooks';
 import {
@@ -24,6 +22,7 @@ import {
   TOptions,
 } from '../types';
 import { cssToRawAnno, pixelToNum, rawToCSSAnno } from '../utils';
+import debounce from 'lodash/debounce';
 
 import AnnotationWrapper from './AnnotationWrapper';
 import Form from './Form';
@@ -47,6 +46,7 @@ export function ImageAnnotator({
   options = {},
 }: TProps) {
   const dispatch = useAppDispatch();
+  const [imgLoaded, setImgLoaded] = useState(false);
   const imgRect = useCurrentImg();
   const { edit, drag, cornerDrag } = useAppSelector(selectMode);
 
@@ -60,16 +60,24 @@ export function ImageAnnotator({
   const [displayForm, setDisplayForm] = useState(false);
   const [annotations, setAnnotations] = useState<TAnnotation[]>([]);
   const [imgRatio, setImgRatio] = useState<TImgRatio>(imgRect);
-  const [imgLoaded, setImgLoaded] = useState(false);
   const [rawAnnos, setRawAnnos] = useState(annos || []);
+  const debouncedPointerMove = useCallback(debounce((e: any) => {
+    const { clientX, clientY } = e;
+    if (!cornerDrag && !drag) return;
+    if (Number.isNaN(+clientX) || Number.isNaN(+clientY)) return;
+    if (pointOutOfBounds(+clientX, +clientY)) return;
+    if (cornerDrag) handleCornerPointerMove(e);
+    if (drag) handleDrag(e);
+  }, 0), [drag, cornerDrag]);
 
   useEffect(() => {
-    setImgRatio(imgRect);
+    if (imgRect.height !== 0 && imgRect.width !== 0) setImgRatio(imgRect);
   }, [imgRect]);
 
   useEffect(() => {
-    if (imgLoaded)
+    if (imgLoaded && imgRatio.height > 0 && imgRatio.width > 0) {
       setAnnotations(rawToCSSAnno(rawAnnos, imgRatio.height, imgRatio.width));
+    }
   }, [rawAnnos, imgLoaded, imgRatio.height, imgRatio.width]);
 
   useEffect(() => {
@@ -97,6 +105,7 @@ export function ImageAnnotator({
     newBoundary.style.boxSizing = 'border-box';
     newBoundary.style.backgroundColor = 'rgba(255, 112, 130, .4)';
     newBoundary.setAttribute('data-testid', 'new-annotation');
+    // user overrides default styles
     if (options.annoStyles) {
       Object.keys(options.annoStyles).forEach((key) => {
         newBoundary.style[key] = options.annoStyles[key];
@@ -317,17 +326,7 @@ export function ImageAnnotator({
     }
   };
 
-  const handlePointerMove = (e: any) => {
-    const { clientX, clientY } = e;
-    if (!cornerDrag && !drag) return;
-    if (Number.isNaN(+clientX) || Number.isNaN(+clientY)) return;
-    if (pointOutOfBounds(+clientX, +clientY)) return;
-    if (cornerDrag) handleCornerPointerMove(e);
-    if (drag) handleDrag(e);
-  };
-
   return (
-    <AyxAppWrapper>
       <div
         data-testid="container"
         id="anno-container"
@@ -362,7 +361,9 @@ export function ImageAnnotator({
             setImgRatio({ height, width });
             setImgLoaded(true);
           }}
-          onPointerMove={handlePointerMove}
+            onPointerMove={() => {
+              debouncedPointerMove()
+            }}
           src={imageSrc}
           style={options.imgStyles ? options.imgStyles : {}}
         />
@@ -371,7 +372,7 @@ export function ImageAnnotator({
             annotationTypes={annotationTypes}
             handleCancelEdit={handleCancelEdit}
             handleEditAnnotation={handleEditAnnotation}
-            handlePointerMove={handlePointerMove}
+            handlePointerMove={debouncedPointerMove}
             handleSaveEdit={handleSaveEdit}
             key={annotation.name}
             options={options}
@@ -401,7 +402,6 @@ export function ImageAnnotator({
           />
         )}
       </div>
-    </AyxAppWrapper>
   );
 }
 
