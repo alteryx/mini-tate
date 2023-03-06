@@ -36,6 +36,7 @@ export const renderEditableAnno = () =>
       top="20px"
       type="cat"
       width="20px"
+      rainbowMode={false}
     />,
     {
       preloadedState: {

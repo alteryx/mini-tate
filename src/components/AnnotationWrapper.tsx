@@ -32,6 +32,7 @@ type Props = {
   removeAnnotation: (name: string) => void;
   annotationTypes: string[];
   options: TOptions;
+  rainbowMode: boolean;
 };
 
 function AnnotationWrapper({
@@ -49,6 +50,7 @@ function AnnotationWrapper({
   type,
   annotationTypes,
   options,
+  rainbowMode,
 }: Props) {
   const dispatch = useAppDispatch();
 
@@ -141,6 +143,7 @@ function AnnotationWrapper({
       name={name}
       types={annotationTypes}
       type={type}
+      rainbowMode={rainbowMode}
     />
   );
 }

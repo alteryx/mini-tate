@@ -13,16 +13,23 @@ export type Props = {
   onClick: () => void;
   options: TOptions;
   name: string;
+  rainbowMode: boolean;
   type?: string;
   types?: string[];
 };
 
-const colors = [[245, 121, 58], [169, 90, 161], [133, 192, 249], [15, 32, 128]]
+const colors = [
+  [245, 121, 58],
+  [169, 90, 161],
+  [133, 192, 249],
+  [15, 32, 128],
+];
 const getColor = (types, type) => {
-  if (!types.length || type === null || types.indexOf(type) === -1) return 'none';
+  if (!types.length || type === null || types.indexOf(type) === -1)
+    return 'none';
   const [r, g, b] = colors[types.indexOf(type) % 4];
-  return `rgba(${r}, ${g}, ${b}, 0.5)`
-}
+  return `rgba(${r}, ${g}, ${b}, 0.5)`;
+};
 
 function StaticAnnotation({
   height,
@@ -32,13 +39,14 @@ function StaticAnnotation({
   onClick,
   options,
   name,
+  rainbowMode,
   type = null,
-  types = []
+  types = [],
 }: Props) {
   const styles = options.annoStyles || {};
   const [showName, setShowName] = useState<boolean>(false);
   // color-code by type
-  const backgroundColor = getColor(types, type);
+  const backgroundColor = rainbowMode ? getColor(types, type) : 'none';
 
   const calculateTooltipPosition = () => {
     const leftCoord = pixelToNum(width) / 2 - 100;

@@ -25,6 +25,7 @@ describe('<AnnotationWrapper />', () => {
         top="20px"
         type="cat"
         width="20px"
+        rainbowMode={false}
       />
     );
 

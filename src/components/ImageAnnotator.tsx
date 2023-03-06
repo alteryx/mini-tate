@@ -35,6 +35,7 @@ export type TProps = {
   onError?: (error: string) => any;
   annotationTypes?: string[];
   options?: TOptions;
+  rainbowMode?: boolean;
 };
 
 export function ImageAnnotator({
@@ -44,6 +45,7 @@ export function ImageAnnotator({
   onError,
   annotationTypes,
   options = {},
+  rainbowMode = false,
 }: TProps) {
   const dispatch = useAppDispatch();
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -404,6 +406,7 @@ export function ImageAnnotator({
           key={annotation.name}
           options={options}
           removeAnnotation={removeAnnotation}
+          rainbowMode={rainbowMode}
           {...annotation}
         />
       ))}
