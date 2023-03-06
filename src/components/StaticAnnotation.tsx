@@ -29,7 +29,13 @@ function StaticAnnotation({
 
   const calculateTooltipPosition = () => {
     const leftCoord = pixelToNum(width) / 2 - 100;
-    if (leftCoord < pixelToNum(left)) return left;
+    const imgBounds = document
+      .getElementById('anno-img')
+      .getBoundingClientRect();
+    if (imgBounds.right < (leftCoord + pixelToNum(left) + 200)) {
+      return pixelToNum(width) < 200 ? `${pixelToNum(width) - 200}px` : left;
+    }
+    if (leftCoord < 0) return left;
     return `${leftCoord}px`;
   };
 
