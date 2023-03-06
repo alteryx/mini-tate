@@ -14,6 +14,7 @@ describe('<AnnotationWrapper />', () => {
         annotationTypes={['cat', 'dog']}
         handleCancelEdit={jest.fn()}
         handleEditAnnotation={jest.fn()}
+        handleKeyPress={jest.fn()}
         handlePointerMove={jest.fn()}
         handleSaveEdit={jest.fn()}
         height="20px"

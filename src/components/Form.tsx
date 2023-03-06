@@ -83,7 +83,7 @@ function Form({
             <Grid item xs={12}>
               <FormControl fullWidth>
                 <TextField
-                  autoFocus
+                  autoFocus={name === ''}
                   id="annotation-name"
                   onChange={(e) =>
                     setValues({ ...values, name: e.target.value })

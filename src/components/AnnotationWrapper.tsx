@@ -26,6 +26,7 @@ type Props = {
   width: string;
   handleEditAnnotation: (name: string) => void;
   handleCancelEdit: () => void;
+  handleKeyPress: (e: React.KeyboardEvent) => void;
   handlePointerMove: (event: any) => void;
   handleSaveEdit: (annotation: TAnnotation, originalName: string) => void;
   removeAnnotation: (name: string) => void;
@@ -41,6 +42,7 @@ function AnnotationWrapper({
   top,
   left,
   handleCancelEdit,
+  handleKeyPress,
   handlePointerMove,
   handleSaveEdit,
   removeAnnotation,
@@ -97,6 +99,7 @@ function AnnotationWrapper({
       }}
       handleCornerPointerDown={handleCornerPointerDown}
       handleCornerPointerUp={handleCornerPointerUp}
+      handleKeyPress={handleKeyPress}
       handlePointerDown={handlePointerDown}
       handlePointerMove={handlePointerMove}
       handlePointerUp={handlePointerUp}

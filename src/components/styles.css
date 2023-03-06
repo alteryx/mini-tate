@@ -24,6 +24,7 @@
   box-sizing: border-box;
   border-color: #d7354a;
   background-color: rgba(255, 112, 130, 0.4);
+  outline: none;
 }
 
 .annotationNameHover {

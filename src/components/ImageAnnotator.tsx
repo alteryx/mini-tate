@@ -329,6 +329,25 @@ export function ImageAnnotator({
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    e.preventDefault();
+    const { key } = e;
+    switch (key) {
+      case 'ArrowRight':
+        dispatch(setLeft(`${pixelToNum(updatedCoords.left) + 1}px`));
+        break;
+      case 'ArrowLeft':
+        dispatch(setLeft(`${pixelToNum(updatedCoords.left) - 1}px`));
+        break;
+      case 'ArrowUp':
+        dispatch(setTop(`${pixelToNum(updatedCoords.top) - 1}px`));
+        break;
+      case 'ArrowDown':
+        dispatch(setTop(`${pixelToNum(updatedCoords.top) + 1}px`));
+        break;
+    }
+  };
+
   return (
     <div
       data-testid="container"
@@ -373,6 +392,7 @@ export function ImageAnnotator({
           annotationTypes={annotationTypes}
           handleCancelEdit={handleCancelEdit}
           handleEditAnnotation={handleEditAnnotation}
+          handleKeyPress={handleKeyPress}
           handlePointerMove={debouncedPointerMove}
           handleSaveEdit={handleSaveEdit}
           key={annotation.name}

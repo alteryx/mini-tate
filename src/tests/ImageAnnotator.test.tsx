@@ -9,7 +9,6 @@ import React from 'react';
 import { render } from '../testUtils';
 import { ImageAnnotator } from '../components/ImageAnnotator';
 
-
 const testAnnos = [
   {
     name: 'test',
@@ -29,7 +28,10 @@ const testAnnos = [
   },
 ];
 
-const loadImg = () => fireEvent.load(screen.getByRole('img'), { target: {getBoundingClientRect: () => ({ height: 100, width: 100 })}});
+const loadImg = () =>
+  fireEvent.load(screen.getByRole('img'), {
+    target: { getBoundingClientRect: () => ({ height: 100, width: 100 }) },
+  });
 
 describe('<ImmageAnnotator />', () => {
   test('renders image', () => {
@@ -64,7 +66,7 @@ describe('<ImmageAnnotator />', () => {
     render(<ImageAnnotator imageSrc="" />);
     expect(screen.queryAllByRole('button')).toHaveLength(0);
   });
-  
+
   test('renders annotations if initialized with annos', () => {
     render(<ImageAnnotator annos={testAnnos} imageSrc="" />);
     loadImg();

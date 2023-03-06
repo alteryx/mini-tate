@@ -2,7 +2,7 @@
 
 import CircleIcon from '@mui/icons-material/Circle';
 import { ClickAwayListener } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import Form from './Form';
 import { corner, TAnnotation, TOptions } from '../types';
@@ -23,6 +23,7 @@ type Props = {
     corner: string
   ) => void;
   handleCornerPointerUp: (e: React.PointerEvent<SVGElement>) => void;
+  handleKeyPress: (e: React.KeyboardEvent) => void;
   handlePointerDown: (e: React.PointerEvent<HTMLDivElement>) => void;
   handlePointerMove: (event: any) => void;
   handlePointerUp: () => void;
@@ -40,6 +41,7 @@ function EditableAnnotation({
   handleCancelEdit,
   handleCornerPointerDown,
   handleCornerPointerUp,
+  handleKeyPress,
   handlePointerDown,
   handlePointerMove,
   handlePointerUp,
@@ -49,6 +51,11 @@ function EditableAnnotation({
   options,
 }: Props) {
   const styles = options.editStyles || {};
+  const annotationRef = useRef(null);
+
+  useEffect(() => {
+    annotationRef?.current?.focus();
+  }, [annotationRef]);
 
   return (
     <ClickAwayListener
@@ -60,6 +67,8 @@ function EditableAnnotation({
         <div
           className="editableAnno"
           data-testid="editable-annotation"
+          ref={annotationRef}
+          onKeyDown={handleKeyPress}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -70,6 +79,7 @@ function EditableAnnotation({
             height,
             width,
           }}
+          tabIndex={0}
         >
           <CircleIcon
             data-testid="corner-tl"
