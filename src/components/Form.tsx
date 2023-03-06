@@ -83,6 +83,7 @@ function Form({
             <Grid item xs={12}>
               <FormControl fullWidth>
                 <TextField
+                  autoFocus
                   id="annotation-name"
                   onChange={(e) =>
                     setValues({ ...values, name: e.target.value })
@@ -134,7 +135,8 @@ function Form({
         >
           <Button
             color="primary"
-            onClick={() =>
+            onClick={(e) => {
+              e.preventDefault();
               handleSave(
                 {
                   top,
@@ -145,8 +147,8 @@ function Form({
                   type: values.type,
                 },
                 name
-              )
-            }
+              );
+            }}
             type="submit"
             variant="contained"
           >
