@@ -330,8 +330,14 @@ export function ImageAnnotator({
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    e.preventDefault();
     const { key } = e;
+    if (
+      !['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].find(
+        (keyCode) => keyCode === key
+      )
+    )
+      return;
+    e.preventDefault();
     switch (key) {
       case 'ArrowRight':
         dispatch(setLeft(`${pixelToNum(updatedCoords.left) + 1}px`));
