@@ -35,7 +35,10 @@ function StaticAnnotation({
     if (imgBounds.right < leftCoord + pixelToNum(left) + 200) {
       return pixelToNum(width) < 200 ? `${pixelToNum(width) - 200}px` : left;
     }
-    if (leftCoord < 0) return left;
+    if (imgBounds.left > leftCoord + pixelToNum(left)){
+      return left;
+    }
+    // if (leftCoord < 0) return left;
     return `${leftCoord}px`;
   };
 
