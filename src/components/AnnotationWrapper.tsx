@@ -139,6 +139,8 @@ function AnnotationWrapper({
       top={top}
       width={width}
       name={name}
+      types={annotationTypes}
+      type={type}
     />
   );
 }
