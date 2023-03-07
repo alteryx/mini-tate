@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alteryx, Inc. All rights reserved.
+// Copyright (c) 2023 Alteryx, Inc. All rights reserved.
 
 import { CSSProperties } from 'react';
 
@@ -8,7 +8,7 @@ export type TAnnotation = {
   top: string;
   left: string;
   name: string;
-  type: string;
+  type: string | null;
 };
 
 export const corner = {
@@ -20,7 +20,7 @@ export const corner = {
 
 export type TAnnotationRaw = {
   name: string;
-  type: string;
+  type: string | null;
   x: number;
   y: number;
   w: number;

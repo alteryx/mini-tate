@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alteryx, Inc. All rights reserved.
+// Copyright (c) 2023 Alteryx, Inc. All rights reserved.
 
 import React from 'react';
 import { render as rtlRender } from '@testing-library/react';

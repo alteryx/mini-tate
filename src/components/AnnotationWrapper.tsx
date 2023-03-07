@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alteryx, Inc. All rights reserved.
+// Copyright (c) 2023 Alteryx, Inc. All rights reserved.
 
 import React, { useEffect } from 'react';
 
@@ -19,7 +19,7 @@ import { setCoords } from '../store/reducers/cursor';
 
 type Props = {
   name: string;
-  type: string;
+  type: string | null;
   top: string;
   left: string;
   height: string;
@@ -109,10 +109,10 @@ function AnnotationWrapper({
         handleSaveEdit(
           {
             ...anno,
-            height: updatedCoords.height,
-            width: updatedCoords.width,
-            top: updatedCoords.top,
-            left: updatedCoords.left,
+            height: updatedCoords.height || '',
+            width: updatedCoords.width || '',
+            top: updatedCoords.top || '',
+            left: updatedCoords.left || '',
           },
           originalName
         );
@@ -120,14 +120,14 @@ function AnnotationWrapper({
         dispatch(setCornerDrag(false));
         dispatch(setSelectedCorner(''));
       }}
-      height={updatedCoords.height}
-      left={updatedCoords.left}
+      height={updatedCoords.height || ''}
+      left={updatedCoords.left || ''}
       name={name}
       options={options}
       removeAnnotation={removeAnnotation}
-      top={updatedCoords.top}
+      top={updatedCoords.top || ''}
       type={type}
-      width={updatedCoords.width}
+      width={updatedCoords.width || ''}
     />
   ));
 

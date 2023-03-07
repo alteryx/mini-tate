@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alteryx, Inc. All rights reserved.
+// Copyright (c) 2023 Alteryx, Inc. All rights reserved.
 
 import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -147,6 +147,7 @@ describe('<ImmageAnnotator />', () => {
 
     const inputs = screen.getAllByRole('textbox');
     const textBox = inputs.find((input) => input.id === 'annotation-name');
+    expect(textBox).toBeDefined();
     await userEvent.clear(textBox);
     await userEvent.type(textBox, 'UPDATED NAME');
     await userEvent.click(screen.getByText('Save'));

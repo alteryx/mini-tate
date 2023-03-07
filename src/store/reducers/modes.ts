@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alteryx, Inc. All rights reserved.
+// Copyright (c) 2023 Alteryx, Inc. All rights reserved.
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 

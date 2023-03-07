@@ -1,6 +1,8 @@
 import { createTheme } from '@mui/material';
 import blue from '@mui/material/colors/blue';
 
+// Copyright (c) 2023 Alteryx, Inc. All rights reserved.
+
 const theme = createTheme({
   typography: {
     button: {

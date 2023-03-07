@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alteryx, Inc. All rights reserved.
+// Copyright (c) 2023 Alteryx, Inc. All rights reserved.
 
 import React, { useState } from 'react';
 import { pixelToNum } from '../utils';
@@ -14,7 +14,7 @@ export type Props = {
   options: TOptions;
   name: string;
   rainbowMode: boolean;
-  type?: string;
+  type?: string | null;
   types?: string[];
 };
 
@@ -50,14 +50,14 @@ function StaticAnnotation({
 
   const calculateTooltipPosition = () => {
     const leftCoord = pixelToNum(width) / 2 - 100;
-    const imgBounds = document
-      .getElementById('anno-img')
-      .getBoundingClientRect();
-    if (imgBounds.right < leftCoord + pixelToNum(left) + 200) {
-      return pixelToNum(width) < 200 ? `${pixelToNum(width) - 200}px` : left;
-    }
-    if (imgBounds.left > leftCoord + pixelToNum(left)) {
-      return left;
+    const imgBounds = document.getElementById('anno-img')?.getBoundingClientRect();
+    if (imgBounds) {
+      if (imgBounds.right < leftCoord + pixelToNum(left) + 200) {
+        return pixelToNum(width) < 200 ? `${pixelToNum(width) - 200}px` : left;
+      }
+      if (imgBounds.left > leftCoord + pixelToNum(left)) {
+        return left;
+      }
     }
     return `${leftCoord}px`;
   };

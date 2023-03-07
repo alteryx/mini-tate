@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alteryx, Inc. All rights reserved.
+// Copyright (c) 2023 Alteryx, Inc. All rights reserved.
 
 import {
   Autocomplete,
@@ -17,7 +17,7 @@ import { pixelToNum } from '../utils';
 
 type Props = {
   name: string;
-  type: string;
+  type: string | null;
   top: string;
   left: string;
   height: string;

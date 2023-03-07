@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Alteryx, Inc. All rights reserved.
+// Copyright (c) 2023 Alteryx, Inc. All rights reserved.
+
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { useAppDispatch, useAppSelector, useCurrentImg } from '../hooks';
@@ -43,7 +44,7 @@ export function ImageAnnotator({
   annos,
   onChange,
   onError,
-  annotationTypes,
+  annotationTypes = [],
   options = {},
   rainbowMode = false,
 }: TProps) {
@@ -57,7 +58,7 @@ export function ImageAnnotator({
   const { coords } = useAppSelector(selectCursor);
 
   const [drawingMode, setDrawingMode] = useState(false);
-  const [boundary, setBoundary] = useState(null);
+  const [boundary, setBoundary] = useState<HTMLDivElement | null>(null);
   const [origin, setOrigin] = useState([0, 0]);
   const [displayForm, setDisplayForm] = useState(false);
   const [annotations, setAnnotations] = useState<TAnnotation[]>([]);
@@ -101,9 +102,11 @@ export function ImageAnnotator({
 
   const createNewBoundary = (x: number, y: number) => {
     const newBoundary = document.createElement('div');
-    const image = document.getElementById('anno-img').getBoundingClientRect();
-    newBoundary.style.top = `${y - image.y}px`;
-    newBoundary.style.left = `${x - image.x}px`;
+    const image = document.getElementById('anno-img')?.getBoundingClientRect();
+    if (image) {
+      newBoundary.style.top = `${y - image.y}px`;
+      newBoundary.style.left = `${x - image.x}px`;
+    }
     newBoundary.style.borderWidth = '3px';
     newBoundary.style.borderStyle = 'solid';
     newBoundary.style.position = 'absolute';
@@ -111,12 +114,13 @@ export function ImageAnnotator({
     newBoundary.style.backgroundColor = 'rgba(255, 112, 130, .4)';
     newBoundary.setAttribute('data-testid', 'new-annotation');
     // user overrides default styles
-    if (options.annoStyles) {
-      Object.keys(options.annoStyles).forEach((key) => {
-        newBoundary.style[key] = options.annoStyles[key];
+    const { annoStyles } = options;
+    if (annoStyles) {
+      Object.keys(annoStyles).forEach((key) => {
+        newBoundary.style[key] = annoStyles[key];
       });
     }
-    document.getElementById('anno-container').appendChild(newBoundary);
+    document.getElementById('anno-container')?.appendChild(newBoundary);
     setOrigin([x, y]);
     setBoundary(newBoundary);
     setDrawingMode(true);
@@ -133,7 +137,7 @@ export function ImageAnnotator({
   };
 
   const handleEditAnnotation = (name: string) => {
-    const newSelectedAnno = annotations.find((a) => a.name === name);
+    const newSelectedAnno = annotations.find((a) => a.name === name) || null;
     if (selectedAnno !== null && selectedAnno !== newSelectedAnno) {
       dispatch(clearSelectedAnno());
       dispatch(setEdit(false));
@@ -146,23 +150,24 @@ export function ImageAnnotator({
   // expects screen coordinates (clientX and clientY from the event)
   // calculates if those screen coordinates are within the bounds of the visible image
   const pointOutOfBounds = (x: number, y: number) => {
-    const imgBounds = document
-      .getElementById('anno-img')
-      .getBoundingClientRect();
+    const imgBounds = document.getElementById('anno-img')?.getBoundingClientRect();
     const containerBounds = (
-      document.getElementById('anno-container').parentNode as HTMLElement
+      document.getElementById('anno-container')?.parentNode as HTMLElement
     ).getBoundingClientRect();
-    const top = Math.max(imgBounds.top, containerBounds.top);
-    const bottom = Math.min(imgBounds.bottom, containerBounds.bottom);
-    const right = Math.min(imgBounds.right, containerBounds.right);
-    const left = Math.max(imgBounds.left, containerBounds.left);
-    return x < left || x > right || y < top || y > bottom;
+    if (imgBounds) {
+      const top = Math.max(imgBounds.top, containerBounds.top);
+      const bottom = Math.min(imgBounds.bottom, containerBounds.bottom);
+      const right = Math.min(imgBounds.right, containerBounds.right);
+      const left = Math.max(imgBounds.left, containerBounds.left);
+      return x < left || x > right || y < top || y > bottom;
+    }
+    return true;
   };
 
   const dragBoundary = (x: number, y: number) => {
     if (pointOutOfBounds(x, y)) return;
-    const image = document.getElementById('anno-img').getBoundingClientRect();
-    if (boundary) {
+    const image = document.getElementById('anno-img')?.getBoundingClientRect();
+    if (boundary && image) {
       if (x < origin[0]) {
         boundary.style.left = `${x - image.x}px`;
         boundary.style.width = `${origin[0] - x}px`;
@@ -246,7 +251,7 @@ export function ImageAnnotator({
     } else {
       const updatedAnno = { height, width, top, left, name, type };
       const newAnnotations = annotations.map((a) => {
-        if (a.name === selectedAnno.name) return updatedAnno;
+        if (a.name === selectedAnno?.name) return updatedAnno;
         return a;
       });
       setAnnotations(newAnnotations);
@@ -310,8 +315,8 @@ export function ImageAnnotator({
     if (drag) {
       const { clientX, clientY } = e;
       const imgBounds = document
-        .getElementById('anno-img')
-        .getBoundingClientRect();
+        .getElementById('anno-img')?.getBoundingClientRect();
+      if (!imgBounds) return;
       const newLeft = pixelToNum(updatedCoords.left) + (clientX - coords[0]);
       const newTop = pixelToNum(updatedCoords.top) + (clientY - coords[1]);
       const screenX = newLeft + imgBounds.x;
@@ -417,21 +422,22 @@ export function ImageAnnotator({
         <Form
           annotationTypes={annotationTypes}
           handleCancel={() => {
-            boundary.remove();
+            boundary?.remove();
             setDisplayForm(false);
           }}
           handleDelete={null}
           handleSave={(newAnnotation) => {
             setDisplayForm(false);
+            if (!boundary) return;
             addAnnotation(boundary, newAnnotation);
           }}
-          height={boundary.style.height}
+          height={boundary?.style.height || ''}
           labels={options.labels || {}}
-          left={boundary.style.left}
+          left={boundary?.style.left || ''}
           name=""
-          top={boundary.style.top}
+          top={boundary?.style.top || ''}
           type={annotationTypes.length ? annotationTypes[0] : ''}
-          width={boundary.style.width}
+          width={boundary?.style.width || ''}
         />
       )}
     </div>
