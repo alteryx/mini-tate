@@ -2,9 +2,9 @@
 
 A small React library that provides annotation utilities for marking images.
 
-[](./assets/minitate_demo1.png)
+<img src="./assets/minitate_demo1.png" alt="mini-tate name on hover" width="300"/>
 
-[](./assets/minitate_demo1.png)
+<img src="./assets/minitate_demo2.png" alt="mini-tate annotation form" width="300"/>
 
 ## Features
 
