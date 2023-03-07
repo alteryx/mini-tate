@@ -2,6 +2,10 @@
 
 A small React library that provides annotation utilities for marking images.
 
+[](./assets/minitate_demo1.png)
+
+[](./assets/minitate_demo1.png)
+
 ## Features
 
 - Mousedown and drag to create a new annotation.
