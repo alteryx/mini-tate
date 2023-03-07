@@ -35,6 +35,7 @@ export type TProps = {
   onError?: (error: string) => any;
   annotationTypes?: string[];
   options?: TOptions;
+  rainbowMode?: boolean;
 };
 
 export function ImageAnnotator({
@@ -44,6 +45,7 @@ export function ImageAnnotator({
   onError,
   annotationTypes,
   options = {},
+  rainbowMode = false,
 }: TProps) {
   const dispatch = useAppDispatch();
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -61,14 +63,17 @@ export function ImageAnnotator({
   const [annotations, setAnnotations] = useState<TAnnotation[]>([]);
   const [imgRatio, setImgRatio] = useState<TImgRatio>(imgRect);
   const [rawAnnos, setRawAnnos] = useState(annos || []);
-  const debouncedPointerMove = useCallback(debounce((e: any) => {
-    const { clientX, clientY } = e;
-    if (!cornerDrag && !drag) return;
-    if (Number.isNaN(+clientX) || Number.isNaN(+clientY)) return;
-    if (pointOutOfBounds(+clientX, +clientY)) return;
-    if (cornerDrag) handleCornerPointerMove(e);
-    if (drag) handleDrag(e);
-  }, 0), [drag, cornerDrag]);
+  const debouncedPointerMove = useCallback(
+    debounce((e: PointerEvent) => {
+      const { clientX, clientY } = e;
+      if (!cornerDrag && !drag) return;
+      if (Number.isNaN(+clientX) || Number.isNaN(+clientY)) return;
+      if (pointOutOfBounds(+clientX, +clientY)) return;
+      if (cornerDrag) handleCornerPointerMove(e);
+      if (drag) handleDrag(e);
+    }, 0),
+    [drag, cornerDrag]
+  );
 
   useEffect(() => {
     if (imgRect.height !== 0 && imgRect.width !== 0) setImgRatio(imgRect);
@@ -326,88 +331,116 @@ export function ImageAnnotator({
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent, name: string) => {
+    const { key } = e;
+    if (
+      !['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'Backspace'].find(
+        (keyCode) => keyCode === key
+      )
+    )
+      return;
+    e.preventDefault();
+    switch (key) {
+      case 'ArrowRight':
+        dispatch(setLeft(`${pixelToNum(updatedCoords.left) + 1}px`));
+        break;
+      case 'ArrowLeft':
+        dispatch(setLeft(`${pixelToNum(updatedCoords.left) - 1}px`));
+        break;
+      case 'ArrowUp':
+        dispatch(setTop(`${pixelToNum(updatedCoords.top) - 1}px`));
+        break;
+      case 'ArrowDown':
+        dispatch(setTop(`${pixelToNum(updatedCoords.top) + 1}px`));
+        break;
+      case 'Backspace':
+        removeAnnotation(name);
+        break;
+    }
+  };
+
   return (
-      <div
-        data-testid="container"
-        id="anno-container"
-        onPointerDown={(e) => {
-          if (drawingMode || edit || displayForm) return;
-          setDrawingMode(true);
-          createNewBoundary(e.clientX, e.clientY);
+    <div
+      data-testid="container"
+      id="anno-container"
+      onPointerDown={(e) => {
+        if (drawingMode || edit || displayForm) return;
+        setDrawingMode(true);
+        createNewBoundary(e.clientX, e.clientY);
+      }}
+      onPointerMove={(e) => {
+        if (drawingMode) dragBoundary(e.clientX, e.clientY);
+      }}
+      onPointerUp={() => {
+        if (drawingMode) {
+          setDrawingMode(false);
+          setDisplayForm(true);
+        }
+      }}
+      style={{
+        touchAction: 'none',
+        display: 'inline-block',
+        position: 'relative',
+      }}
+    >
+      <img
+        alt=""
+        draggable="false"
+        id="anno-img"
+        onLoad={(e) => {
+          const { height, width } = (
+            e.target as HTMLImageElement
+          ).getBoundingClientRect();
+          setImgRatio({ height, width });
+          setImgLoaded(true);
         }}
-        onPointerMove={(e) => {
-          if (drawingMode) dragBoundary(e.clientX, e.clientY);
-        }}
-        onPointerUp={() => {
-          if (drawingMode) {
-            setDrawingMode(false);
-            setDisplayForm(true);
-          }
-        }}
-        style={{
-          touchAction: 'none',
-          display: 'inline-block',
-          position: 'relative',
-        }}
-      >
-        <img
-          alt=""
-          draggable="false"
-          id="anno-img"
-          onLoad={(e) => {
-            const { height, width } = (
-              e.target as HTMLImageElement
-            ).getBoundingClientRect();
-            setImgRatio({ height, width });
-            setImgLoaded(true);
-          }}
-            onPointerMove={() => {
-              debouncedPointerMove()
-            }}
-          src={imageSrc}
-          style={options.imgStyles ? options.imgStyles : {}}
+        onPointerMove={(e) => debouncedPointerMove(e)}
+        src={imageSrc}
+        style={options.imgStyles ? options.imgStyles : {}}
+      />
+      {annotations.map((annotation) => (
+        <AnnotationWrapper
+          annotationTypes={annotationTypes}
+          handleCancelEdit={handleCancelEdit}
+          handleEditAnnotation={handleEditAnnotation}
+          handleKeyPress={handleKeyPress}
+          handlePointerMove={debouncedPointerMove}
+          handleSaveEdit={handleSaveEdit}
+          key={annotation.name}
+          options={options}
+          removeAnnotation={removeAnnotation}
+          rainbowMode={rainbowMode}
+          {...annotation}
         />
-        {annotations.map((annotation) => (
-          <AnnotationWrapper
-            annotationTypes={annotationTypes}
-            handleCancelEdit={handleCancelEdit}
-            handleEditAnnotation={handleEditAnnotation}
-            handlePointerMove={debouncedPointerMove}
-            handleSaveEdit={handleSaveEdit}
-            key={annotation.name}
-            options={options}
-            removeAnnotation={removeAnnotation}
-            {...annotation}
-          />
-        ))}
-        {displayForm && (
-          <Form
-            annotationTypes={annotationTypes}
-            handleCancel={() => {
-              boundary.remove();
-              setDisplayForm(false);
-            }}
-            handleDelete={null}
-            handleSave={(newAnnotation) => {
-              setDisplayForm(false);
-              addAnnotation(boundary, newAnnotation);
-            }}
-            height={boundary.style.height}
-            labels={options.labels || {}}
-            left={boundary.style.left}
-            name=""
-            top={boundary.style.top}
-            type={annotationTypes.length ? annotationTypes[0] : ''}
-            width={boundary.style.width}
-          />
-        )}
-      </div>
+      ))}
+      {displayForm && (
+        <Form
+          annotationTypes={annotationTypes}
+          handleCancel={() => {
+            boundary.remove();
+            setDisplayForm(false);
+          }}
+          handleDelete={null}
+          handleSave={(newAnnotation) => {
+            setDisplayForm(false);
+            addAnnotation(boundary, newAnnotation);
+          }}
+          height={boundary.style.height}
+          labels={options.labels || {}}
+          left={boundary.style.left}
+          name=""
+          top={boundary.style.top}
+          type={annotationTypes.length ? annotationTypes[0] : ''}
+          width={boundary.style.width}
+        />
+      )}
+    </div>
   );
 }
 
 ImageAnnotator.defaultProps = {
   annos: null,
-  annotationTypes: ['string', 'image', 'table'],
+  annotationTypes: [],
   onChange: null,
   onError: null,
   options: [],

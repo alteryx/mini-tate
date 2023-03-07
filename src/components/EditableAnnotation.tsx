@@ -2,7 +2,7 @@
 
 import CircleIcon from '@mui/icons-material/Circle';
 import { ClickAwayListener } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import Form from './Form';
 import { corner, TAnnotation, TOptions } from '../types';
@@ -23,8 +23,9 @@ type Props = {
     corner: string
   ) => void;
   handleCornerPointerUp: (e: React.PointerEvent<SVGElement>) => void;
+  handleKeyPress: (e: React.KeyboardEvent, name: string) => void;
   handlePointerDown: (e: React.PointerEvent<HTMLDivElement>) => void;
-  handlePointerMove: (event: any) => void;
+  handlePointerMove: (event: React.PointerEvent) => void;
   handlePointerUp: () => void;
   annotationTypes: string[];
   options: TOptions;
@@ -40,6 +41,7 @@ function EditableAnnotation({
   handleCancelEdit,
   handleCornerPointerDown,
   handleCornerPointerUp,
+  handleKeyPress,
   handlePointerDown,
   handlePointerMove,
   handlePointerUp,
@@ -49,6 +51,11 @@ function EditableAnnotation({
   options,
 }: Props) {
   const styles = options.editStyles || {};
+  const annotationRef = useRef(null);
+
+  useEffect(() => {
+    annotationRef?.current?.focus();
+  }, [annotationRef]);
 
   return (
     <ClickAwayListener
@@ -60,6 +67,8 @@ function EditableAnnotation({
         <div
           className="editableAnno"
           data-testid="editable-annotation"
+          ref={annotationRef}
+          onKeyDown={(e) => handleKeyPress(e, name)}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -70,10 +79,11 @@ function EditableAnnotation({
             height,
             width,
           }}
+          tabIndex={0}
         >
           <CircleIcon
             data-testid="corner-tl"
-            fontSize='small'
+            fontSize="small"
             onPointerDown={(e) => handleCornerPointerDown(e, corner.TOP_LEFT)}
             onPointerUp={handleCornerPointerUp}
             style={{
@@ -85,7 +95,7 @@ function EditableAnnotation({
           />
           <CircleIcon
             data-testid="corner-tr"
-            fontSize='small'
+            fontSize="small"
             onPointerDown={(e) => handleCornerPointerDown(e, corner.TOP_RIGHT)}
             onPointerUp={handleCornerPointerUp}
             style={{
@@ -97,7 +107,7 @@ function EditableAnnotation({
           />
           <CircleIcon
             data-testid="corner-bl"
-            fontSize='small'
+            fontSize="small"
             onPointerDown={(e) =>
               handleCornerPointerDown(e, corner.BOTTOM_LEFT)
             }
@@ -111,7 +121,7 @@ function EditableAnnotation({
           />
           <CircleIcon
             data-testid="corner-br"
-            fontSize='small'
+            fontSize="small"
             onPointerDown={(e) =>
               handleCornerPointerDown(e, corner.BOTTOM_RIGHT)
             }

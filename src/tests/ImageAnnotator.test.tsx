@@ -6,9 +6,8 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 
-import { render, genCustomEvt } from '../testUtils';
+import { render } from '../testUtils';
 import { ImageAnnotator } from '../components/ImageAnnotator';
-
 
 const testAnnos = [
   {
@@ -29,38 +28,10 @@ const testAnnos = [
   },
 ];
 
-const loadImg = () => fireEvent.load(screen.getByRole('img'), { target: {getBoundingClientRect: () => ({ height: 100, width: 100 })}});
-
-const renderAnnoAndSelect = () => {
-  render(<ImageAnnotator annos={[testAnnos[0]]} imageSrc="fake.png" />, {});
-  screen.getByRole('img').getBoundingClientRect = () => ({
-    width: 100,
-    height: 100,
-    bottom: 100,
-    left: 0,
-    top: 0,
-    right: 100,
-    x: 0,
-    y: 0,
-    toJSON: null,
+const loadImg = () =>
+  fireEvent.load(screen.getByRole('img'), {
+    target: { getBoundingClientRect: () => ({ height: 100, width: 100 }) },
   });
-  (
-    screen.getByTestId('container').parentNode as HTMLElement
-  ).getBoundingClientRect = () => ({
-    width: 100,
-    height: 100,
-    bottom: 100,
-    left: 0,
-    top: 0,
-    right: 100,
-    x: 0,
-    y: 0,
-    toJSON: null,
-  });
-
-  loadImg();
-  fireEvent.click(screen.getByTestId('static-annotation'));
-};
 
 describe('<ImmageAnnotator />', () => {
   test('renders image', () => {
@@ -87,15 +58,15 @@ describe('<ImmageAnnotator />', () => {
       fireEvent.pointerMove(screen.getByTestId('container'));
     }
     fireEvent.pointerUp(screen.getByRole('img'));
-    // save, cancel, and the dropdown buttons
-    expect(screen.getAllByRole('button')).toHaveLength(3);
+    // save and cancel
+    expect(screen.getAllByRole('button')).toHaveLength(2);
   });
 
   test('form is hidden by default', () => {
     render(<ImageAnnotator imageSrc="" />);
     expect(screen.queryAllByRole('button')).toHaveLength(0);
   });
-  
+
   test('renders annotations if initialized with annos', () => {
     render(<ImageAnnotator annos={testAnnos} imageSrc="" />);
     loadImg();
@@ -131,15 +102,15 @@ describe('<ImmageAnnotator />', () => {
     expect(mockOnChange).toBeCalled();
   });
 
-  test('form dropdown defaults to first entry in type array', () => {
+  test('hide form dropdown if there is no type array', () => {
     render(<ImageAnnotator imageSrc="" />);
     fireEvent.pointerDown(screen.getByRole('img'));
     fireEvent.pointerMove(screen.getByTestId('container'));
     fireEvent.pointerUp(screen.getByRole('img'));
-    expect(screen.getByDisplayValue('string')).not.toBeNull();
+    expect(screen.getAllByRole('textbox')).toHaveLength(1);
   });
 
-  test('form dropdown defaults to first entry in type array even when passed custom options', () => {
+  test('form dropdown defaults to first entry in type array when passed custom options', () => {
     render(
       <ImageAnnotator annotationTypes={['cat', 'dog', 'banana']} imageSrc="" />
     );
@@ -147,6 +118,7 @@ describe('<ImmageAnnotator />', () => {
     fireEvent.pointerMove(screen.getByTestId('container'));
     fireEvent.pointerUp(screen.getByRole('img'));
     expect(screen.getByDisplayValue('cat')).not.toBeNull();
+    expect(screen.getAllByRole('button')).toHaveLength(3);
   });
 
   test('clicking on static annotation puts it into edit mode', async () => {

@@ -42,20 +42,15 @@ function Form({
   annotationTypes,
   labels,
 }: Props) {
-
   const [values, setValues] = useState({ name, type });
 
   const { nameLabel, typeLabel, saveLabel, cancelLabel, deleteLabel } = labels;
 
-  const handleChange = (changeKey) => (event) => {
-    setValues({ ...values, [changeKey]: event.target.value });
-  };
-
   const calculateFormPosition = () => {
     const leftCoord = pixelToNum(left) + pixelToNum(width) - 350;
     if (leftCoord < pixelToNum(left)) return left;
-    return `${leftCoord}px`
-  }
+    return `${leftCoord}px`;
+  };
 
   return (
     <Card
@@ -64,80 +59,115 @@ function Form({
         left: `${calculateFormPosition()}`,
         position: 'absolute',
         zIndex: '1',
-        width: 350
+        width: 350,
       }}
     >
-      <CardContent>
-        <Grid container spacing={4}>
-          <Grid item xs={12}>
-            <FormControl fullWidth>
-              <TextField
-                id="annotation-name"
-                onChange={handleChange('name')}
-                value={values.name}
-                label={nameLabel || 'Annotation Name'}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                size='small'
-              />
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <FormControl fullWidth>
-              <Autocomplete
-                id="combo-box-demo"
-                options={annotationTypes}
-                onChange={handleChange('type')}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSave(
+            {
+              top,
+              left,
+              height,
+              width,
+              name: values.name,
+              type: values.type,
+            },
+            name
+          );
+        }}
+      >
+        <CardContent>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <TextField
+                  autoFocus={name === ''}
+                  id="annotation-name"
+                  onChange={(e) =>
+                    setValues({ ...values, name: e.target.value })
+                  }
+                  value={values.name}
+                  label={nameLabel || 'Annotation Name'}
                   InputLabelProps={{
                     shrink: true,
                   }}
-                    label={typeLabel || 'Annotation Type'}
+                  size="small"
+                />
+              </FormControl>
+            </Grid>
+            {annotationTypes.length ? (
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <Autocomplete
+                    id="combo-box-demo"
+                    options={annotationTypes}
+                    onChange={(_, newValue, reason) => {
+                      if (reason === 'clear' && annotationTypes.length)
+                        setValues({ ...values, type: annotationTypes[0] });
+                      else setValues({ ...values, type: newValue });
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        label={typeLabel || 'Annotation Type'}
+                      />
+                    )}
+                    size="small"
+                    value={values.type}
                   />
-                )}
-                size="small"
-                value={values.type}
-              />
-            </FormControl>
+                </FormControl>
+              </Grid>
+            ) : null}
           </Grid>
-        </Grid>
-      </CardContent>
-      <CardActions style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', borderTop: '1px solid rgba(0, 0, 0, 0.1)', display: 'flex', 'justifyContent': 'right' }}>
-        <Button
-          color="primary"
-          onClick={() =>
-            handleSave(
-              {
-                top,
-                left,
-                height,
-                width,
-                name: values.name,
-                type: values.type,
-              },
-              name
-            )
-          }
-          variant="contained"
+        </CardContent>
+        <CardActions
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.05)',
+            borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+            display: 'flex',
+            justifyContent: 'right',
+          }}
         >
-          {saveLabel || 'Save'}
-        </Button>
-        <Button color="secondary" onClick={handleCancel} variant="contained">
-          {cancelLabel || 'Cancel'}
-        </Button>
-        {handleDelete && (
           <Button
-            id="removeAnnoBtn"
-            onClick={() => handleDelete(name)}
+            color="primary"
+            onClick={(e) => {
+              e.preventDefault();
+              handleSave(
+                {
+                  top,
+                  left,
+                  height,
+                  width,
+                  name: values.name,
+                  type: values.type,
+                },
+                name
+              );
+            }}
+            type="submit"
             variant="contained"
           >
-            {deleteLabel || 'Delete'}
+            {saveLabel || 'Save'}
           </Button>
-        )}
-      </CardActions>
+          <Button color="secondary" onClick={handleCancel} variant="contained">
+            {cancelLabel || 'Cancel'}
+          </Button>
+          {handleDelete && (
+            <Button
+              id="removeAnnoBtn"
+              onClick={() => handleDelete(name)}
+              variant="contained"
+            >
+              {deleteLabel || 'Delete'}
+            </Button>
+          )}
+        </CardActions>
+      </form>
     </Card>
   );
 }

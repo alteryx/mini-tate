@@ -26,11 +26,13 @@ type Props = {
   width: string;
   handleEditAnnotation: (name: string) => void;
   handleCancelEdit: () => void;
-  handlePointerMove: (event: any) => void;
+  handleKeyPress: (e: React.KeyboardEvent, name: string) => void;
+  handlePointerMove: (event: React.PointerEvent) => void;
   handleSaveEdit: (annotation: TAnnotation, originalName: string) => void;
   removeAnnotation: (name: string) => void;
   annotationTypes: string[];
   options: TOptions;
+  rainbowMode: boolean;
 };
 
 function AnnotationWrapper({
@@ -41,12 +43,14 @@ function AnnotationWrapper({
   top,
   left,
   handleCancelEdit,
+  handleKeyPress,
   handlePointerMove,
   handleSaveEdit,
   removeAnnotation,
   type,
   annotationTypes,
   options,
+  rainbowMode,
 }: Props) {
   const dispatch = useAppDispatch();
 
@@ -97,6 +101,7 @@ function AnnotationWrapper({
       }}
       handleCornerPointerDown={handleCornerPointerDown}
       handleCornerPointerUp={handleCornerPointerUp}
+      handleKeyPress={handleKeyPress}
       handlePointerDown={handlePointerDown}
       handlePointerMove={handlePointerMove}
       handlePointerUp={handlePointerUp}
@@ -135,6 +140,10 @@ function AnnotationWrapper({
       options={options}
       top={top}
       width={width}
+      name={name}
+      types={annotationTypes}
+      type={type}
+      rainbowMode={rainbowMode}
     />
   );
 }
