@@ -6,6 +6,17 @@ A small React library that provides annotation utilities for marking images.
 
 ![](./assets/minitate_demo2.png)
 
+## What's new in 2.0?
+
+- Upgraded to `react` 18.
+- Switched to plain `material-ui` as the styling library.
+- If no annotation types are provided, this part of the annotation form is hidden.
+- Show annotation name on hover.
+- Use arrow keys to move annotations.
+- Delete key will delete an annotation that is in edit mode.
+- Auto-focus annotation name when creating a new annotation.
+- Optional `rainbowMode` will color-code the annotations by type (limited to 4 colors).
+
 ## Features
 
 - Mousedown and drag to create a new annotation.
