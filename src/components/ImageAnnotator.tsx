@@ -331,10 +331,10 @@ export function ImageAnnotator({
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent, name: string) => {
     const { key } = e;
     if (
-      !['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].find(
+      !['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'Backspace'].find(
         (keyCode) => keyCode === key
       )
     )
@@ -352,6 +352,9 @@ export function ImageAnnotator({
         break;
       case 'ArrowDown':
         dispatch(setTop(`${pixelToNum(updatedCoords.top) + 1}px`));
+        break;
+      case 'Backspace':
+        removeAnnotation(name);
         break;
     }
   };

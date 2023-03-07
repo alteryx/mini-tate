@@ -26,8 +26,8 @@ type Props = {
   width: string;
   handleEditAnnotation: (name: string) => void;
   handleCancelEdit: () => void;
-  handleKeyPress: (e: React.KeyboardEvent) => void;
-  handlePointerMove: (event: any) => void;
+  handleKeyPress: (e: React.KeyboardEvent, name: string) => void;
+  handlePointerMove: (event: React.PointerEvent) => void;
   handleSaveEdit: (annotation: TAnnotation, originalName: string) => void;
   removeAnnotation: (name: string) => void;
   annotationTypes: string[];

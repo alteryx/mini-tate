@@ -23,9 +23,9 @@ type Props = {
     corner: string
   ) => void;
   handleCornerPointerUp: (e: React.PointerEvent<SVGElement>) => void;
-  handleKeyPress: (e: React.KeyboardEvent) => void;
+  handleKeyPress: (e: React.KeyboardEvent, name: string) => void;
   handlePointerDown: (e: React.PointerEvent<HTMLDivElement>) => void;
-  handlePointerMove: (event: any) => void;
+  handlePointerMove: (event: React.PointerEvent) => void;
   handlePointerUp: () => void;
   annotationTypes: string[];
   options: TOptions;
@@ -68,7 +68,7 @@ function EditableAnnotation({
           className="editableAnno"
           data-testid="editable-annotation"
           ref={annotationRef}
-          onKeyDown={handleKeyPress}
+          onKeyDown={(e) => handleKeyPress(e, name)}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
