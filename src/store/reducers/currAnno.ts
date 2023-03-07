@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alteryx, Inc. All rights reserved.
+// Copyright (c) 2023 Alteryx, Inc. All rights reserved.
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -26,14 +26,16 @@ export const currAnnoSlice = createSlice({
   name: 'currAnno',
   initialState,
   reducers: {
-    setSelectedAnno: (state, action: PayloadAction<TAnnotation>) => {
+    setSelectedAnno: (state, action: PayloadAction<TAnnotation | null>) => {
       state.selectedAnno = action.payload;
-      state.updatedCoords = {
-        width: action.payload.width,
-        height: action.payload.height,
-        top: action.payload.top,
-        left: action.payload.left,
-      };
+      if (action.payload !== null) {
+        state.updatedCoords = {
+          width: action.payload.width,
+          height: action.payload.height,
+          top: action.payload.top,
+          left: action.payload.left,
+        };
+      }
     },
     clearSelectedAnno: (state) => {
       state.selectedAnno = null;

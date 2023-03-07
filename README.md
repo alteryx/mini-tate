@@ -2,15 +2,20 @@
 
 A small React library that provides annotation utilities for marking images.
 
+![](./assets/minitate_demo1.png)
+
+![](./assets/minitate_demo2.png)
+
 ## Features
 
 - Mousedown and drag to create a new annotation.
-- Form for inputting name and type of annotation (type dropdown is customizable).
-- Edit annotations by clicking and dragging to move, pulling on the corners to resize, and editing the form to update the metadata.
+- Form for inputting name and, optionally, type of annotation.
+- Edit annotations by clicking and dragging to move, pulling on the corners to resize, using the arrow keys to reposition, and editing the form to update the metadata.
 - Custom `onChange` callback can be supplied to have control over the annotations as they change.
 - Custom `onError` callback can be supplied to have control over errors as they occur.
 - Pass in custom CSS.
 - Pass in custom labels (supports localization).
+- Optional color-coded annotations based on annotation types.
 
 ## Installation
 
@@ -69,6 +74,7 @@ function App() {
         annoStyles: { borderColor: 'green' },
         labels: { nameLabel: 'Name' }
       }}
+      rainbowMode
     />
   );
 }
@@ -80,8 +86,9 @@ function App() {
 - `annos`: annotations to be rendered.
 - `onChange`: callback to be triggered whenever the annotations update.
 - `onError`: callback to be triggered whenever there is an error with the annotations.
-- `annotationTypes`: values to populate the "annotation type" input dropdown. Defaults to "string", "image", and "table".
+- `annotationTypes`: values to populate the "annotation type" input dropdown. Defaults to `[]` and dropdown will be hidden.
 - `options`: object to pass in custom styles or labels. More details below.
+- `rainbowMode`: optional boolean (defaults to false) that when set to true will color-code the annotations based on annotation type (limited to 4 colors). :rainbow:
 
 ### Options
 

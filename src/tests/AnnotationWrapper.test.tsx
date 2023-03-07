@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alteryx, Inc. All rights reserved.
+// Copyright (c) 2023 Alteryx, Inc. All rights reserved.
 
 import { screen } from '@testing-library/react';
 import React from 'react';
@@ -14,6 +14,7 @@ describe('<AnnotationWrapper />', () => {
         annotationTypes={['cat', 'dog']}
         handleCancelEdit={jest.fn()}
         handleEditAnnotation={jest.fn()}
+        handleKeyPress={jest.fn()}
         handlePointerMove={jest.fn()}
         handleSaveEdit={jest.fn()}
         height="20px"
@@ -24,6 +25,7 @@ describe('<AnnotationWrapper />', () => {
         top="20px"
         type="cat"
         width="20px"
+        rainbowMode={false}
       />
     );
 

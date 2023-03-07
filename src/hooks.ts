@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alteryx, Inc. All rights reserved.
+// Copyright (c) 2023 Alteryx, Inc. All rights reserved.
 
 import { useEffect, useState } from 'react';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
@@ -13,10 +13,9 @@ export const useCurrentImg = (): TImgRatio => {
   useEffect(() => {
     const resizeListener = () => {
       let newImgRect = { height: 0, width: 0 };
-      if (document.getElementById('anno-img')) {
-        const { height, width } = document
-          .getElementById('anno-img')
-          .getBoundingClientRect();
+      const annoImg = document.getElementById('anno-img')
+      if (annoImg) {
+        const { height, width } = annoImg.getBoundingClientRect();
         newImgRect = { height, width };
       }
       setImgRect(newImgRect);

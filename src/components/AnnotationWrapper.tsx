@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alteryx, Inc. All rights reserved.
+// Copyright (c) 2023 Alteryx, Inc. All rights reserved.
 
 import React, { useEffect } from 'react';
 
@@ -19,18 +19,20 @@ import { setCoords } from '../store/reducers/cursor';
 
 type Props = {
   name: string;
-  type: string;
+  type: string | null;
   top: string;
   left: string;
   height: string;
   width: string;
   handleEditAnnotation: (name: string) => void;
   handleCancelEdit: () => void;
-  handlePointerMove: (event: any) => void;
+  handleKeyPress: (e: React.KeyboardEvent, name: string) => void;
+  handlePointerMove: (event: React.PointerEvent) => void;
   handleSaveEdit: (annotation: TAnnotation, originalName: string) => void;
   removeAnnotation: (name: string) => void;
   annotationTypes: string[];
   options: TOptions;
+  rainbowMode: boolean;
 };
 
 function AnnotationWrapper({
@@ -41,12 +43,14 @@ function AnnotationWrapper({
   top,
   left,
   handleCancelEdit,
+  handleKeyPress,
   handlePointerMove,
   handleSaveEdit,
   removeAnnotation,
   type,
   annotationTypes,
   options,
+  rainbowMode,
 }: Props) {
   const dispatch = useAppDispatch();
 
@@ -97,6 +101,7 @@ function AnnotationWrapper({
       }}
       handleCornerPointerDown={handleCornerPointerDown}
       handleCornerPointerUp={handleCornerPointerUp}
+      handleKeyPress={handleKeyPress}
       handlePointerDown={handlePointerDown}
       handlePointerMove={handlePointerMove}
       handlePointerUp={handlePointerUp}
@@ -104,10 +109,10 @@ function AnnotationWrapper({
         handleSaveEdit(
           {
             ...anno,
-            height: updatedCoords.height,
-            width: updatedCoords.width,
-            top: updatedCoords.top,
-            left: updatedCoords.left,
+            height: updatedCoords.height || '',
+            width: updatedCoords.width || '',
+            top: updatedCoords.top || '',
+            left: updatedCoords.left || '',
           },
           originalName
         );
@@ -115,14 +120,14 @@ function AnnotationWrapper({
         dispatch(setCornerDrag(false));
         dispatch(setSelectedCorner(''));
       }}
-      height={updatedCoords.height}
-      left={updatedCoords.left}
+      height={updatedCoords.height || ''}
+      left={updatedCoords.left || ''}
       name={name}
       options={options}
       removeAnnotation={removeAnnotation}
-      top={updatedCoords.top}
+      top={updatedCoords.top || ''}
       type={type}
-      width={updatedCoords.width}
+      width={updatedCoords.width || ''}
     />
   ));
 
@@ -135,6 +140,10 @@ function AnnotationWrapper({
       options={options}
       top={top}
       width={width}
+      name={name}
+      types={annotationTypes}
+      type={type}
+      rainbowMode={rainbowMode}
     />
   );
 }
