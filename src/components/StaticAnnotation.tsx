@@ -46,7 +46,7 @@ function StaticAnnotation({
   const styles = options.annoStyles || {};
   const [showName, setShowName] = useState<boolean>(false);
   // color-code by type
-  const backgroundColor = rainbowMode ? getColor(types, type) : 'none';
+  const backgroundColor = rainbowMode ? getColor(types, type) : options.annoStyles.backgroundColor;
 
   const calculateTooltipPosition = () => {
     const leftCoord = pixelToNum(width) / 2 - 100;
