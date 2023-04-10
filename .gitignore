@@ -3,3 +3,4 @@ coverage
 cjs
 dist
 esm
+.npmrc
